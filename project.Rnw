@@ -1,0 +1,439 @@
+\documentclass{article}
+\usepackage[polish]{babel}
+\usepackage[cp1250]{inputenc}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\setcounter{secnumdepth}{0}
+\section{Matematyka ubezpieczeñ na ¿ycie}
+\noindent{\bf Projekt zaliczeniowy - czêœæ 1}
+
+\bigskip
+\noindent Niech $T(x)$ bêdzie zmienn¹ losow¹ opisuj¹c¹ dalsz¹ d³ugoœæ ¿ycia x-latka. Funkcj¹ prze¿ycia nazywamy funkcjê przedstawiaj¹c¹ prawdopodobieñstwo, do¿ycia x-latka chwili k. Funkcjê prze¿ycia zmiennej losowej $T(x)$ oznaczamy jako 
+
+$$_{k}p_{x} = P(T(x)>k)$$
+
+
+<<echo=FALSE>>=
+dane = read.csv2("C:/Users/doncz/Desktop/MMAD/InsuranceProject/tabzycia.csv", header= FALSE, sep=";")
+@
+
+\noindent Korzystaj¹c z tablic ¿ycia z 2017 roku mo¿emy obliczyæ prawdopodobieñstwo prze¿ycia przez 20-latka jeszcze k lat, gdzie $k=\{1,2,...\}$. Za estymator $_{k}p_{x}$ przyjmuje siê $$_{k}\hat{p}_{x} = \frac{l_{x+k}}{l_{x}}$$
+\noindent Poni¿ej przedstawiony zosta³ wykres oraz tabelka prawdopodobieñstwa do¿ycia przez 20-latka chwili k.
+
+<<echo=FALSE, fig=TRUE>>=
+p = c()
+p = (dane[22:101,2])/dane[21,2]
+plot(p,type="l",col="red", main = "Prawdopodobienstwo, ze 20-latek do¿yje k-tego roku.",xlab = "k",ylab = "kPx")
+grid()  
+@
+
+<<echo=FALSE, results=tex>>=
+library(xtable)
+a=1:20
+b=21:40
+c=41:60
+d=61:80
+
+desc <- data.frame(a,(dane[22:41,2]/dane[21,2]),b,(dane[42:61,2]/dane[21,2]),c,(dane[62:81,2]/dane[21,2]),d,(dane[82:101,2]/dane[21,2]))
+names(desc) <- c("k","$_{k}p_{x}$","k","$_{k}p_{x}$","k","$_{k}p_{x}$","k","$_{k}p_{x}$")
+
+desc.table <- xtable(desc,digits=4)
+align(desc.table) <- "|c|c|c|c|c|c|c|c|c|"
+
+print(desc.table, include.rownames = FALSE, sanitize.text.function = function(x) {x} )
+
+@
+\newpage \noindent Dystrybuanta wyznacza prawdopodobieñstwo œmierci x-latka przed lub w chwili k. Dystrybuantê zmiennej losowej $T(x)$ oznaczamy jako $$_{k}p_{x} = P(T(x)\leq k)$$ 
+\noindent Korzystaj¹c z tablic ¿ycia roku mo¿emy obliczyæ prawdopodobieñstwo œmierci 20-latka po k latach, gdzie $k=\{1,2,...\}$. Za estymator $_{k}q_{x}$ przyjmuje siê $$_{k}\hat{q}_{x} = 1-_{k}\hat{p}_{x}=1-\frac{l_{x+k}}{l_{x}}$$
+\noindent Poni¿ej przedstawiony zosta³ wykres oraz tabelka prawdopodobieñstwa œmierci 20-latka po k latach.
+
+<<echo=FALSE, fig=TRUE>>=
+p = c()
+p = (1-(dane[22:101,2])/dane[21,2])
+plot(p,type="l",col="red", main = "Prawdopodobienstwo, œmierci 20-latka po k latach.",xlab = "k",ylab = "kqx")
+grid() 
+@
+
+<<echo=FALSE, results=tex>>=
+library(xtable)
+a=1:20
+b=21:40
+c=41:60
+d=61:80
+
+desc <- data.frame(a,(1-(dane[22:41,2]/dane[21,2])),b,(1-(dane[42:61,2]/dane[21,2])),c,(1-(dane[62:81,2]/dane[21,2])),d,(1-(dane[82:101,2]/dane[21,2])))
+names(desc) <- c("k","$_{k}q_{x}$","k","$_{k}q_{x}$","k","$_{k}q_{x}$","k","$_{k}q_{x}$")
+
+desc.table <- xtable(desc,digits=4)
+align(desc.table) <- "|c|c|c|c|c|c|c|c|c|"
+print(desc.table, include.rownames = FALSE, sanitize.text.function = function(x) {x})
+
+@
+\newpage \noindent Przez $K(x)$ oznaczamy sp³aszczony dalszy czas ¿ycia x-latka ($K=K(x)=[T(x)]$). Prawdopodobieñstwo œmierci 20-latka w k-tym roku oznaczamy jako $$P(K=k)=_{k}p_{x}\cdot q_{x+k}$$
+\noindent Korzystaj¹c z tablic ¿ycia mo¿emy obliczyæ prawdopodobieñswto œmierci x-latka w k-tym roku, gdzie $k=\{1,2,...\}$. Za estymator $P(K=k)$ przyjmuje siê $$P(K=k)=_{k}\hat p_{x}\cdot \hat q_{x+k}=\frac{d_{x+k-1}}{l_{x}}$$.
+
+<<echo=FALSE, fig=TRUE>>=
+p = c()
+p = (dane[22:101,4])/dane[21,2]
+plot(p,type="l",col="red", main = "Prawdopodobienstwo, œmierci 20-latka w k-tym roku.",xlab = "k",ylab = "P(K=k)")
+grid() 
+@
+
+<<echo=FALSE, results=tex>>=
+library(xtable)
+a=1:20
+b=21:40
+c=41:60
+d=61:80
+
+desc <- data.frame(a,(dane[22:41,4]/dane[21,2]),b,(dane[42:61,4]/dane[21,2]),c,(dane[62:81,4]/dane[21,2]),d,(dane[82:101,4]/dane[21,2]))
+names(desc) <- c("k","P(K=k)","k","P(K=k)","k","P(K=k)","k","P(K=k)")
+
+desc.table <- xtable(desc,digits = 4)
+align(desc.table) <- "|c|c|c|c|c|c|c|c|c|"
+print(desc.table, include.rownames = FALSE)
+
+@
+
+
+
+\newpage\noindent{\bf Projekt zaliczeniowy - czêœæ 2}
+
+\bigskip
+\noindent Wprowadzamy dodatkow¹ zmienn¹ losow¹ $T(y)$ opisuj¹c¹ dalszy czas trwania ¿ycia y-latka. Przez $T(x:y) = min(T(x),T(y))$ rozumiemy dalszy czas ¿ycia do momentu œmierci pierwszego z nich. Funkcjê prze¿ycia dla nowej zmiennej losowej $T(x:y)$ oznaczamy jako $$_{k}p_{x:y}=P(T(x:y)>k)$$Zak³adamy, ¿e zmienne te s¹ niezale¿ne. Korzystaj¹c z tablic ¿ycia otrzymujemy $$_{k}p_{x:y}=_{k}p_{x}\cdot_{k}p_{y}=\frac{l_{x+k}}{l_{x}}\cdot\frac{l_{y+k}}{l_{y}}$$Przez $T(\overline{x:y}) = min(T(x),T(y))$ rozumiemy dalszy czas ¿ycia do momentu œmierci ostatniego z nich. Funkcjê prze¿ycia $T(\overline{x:y})$ oznaczamy jako $$_{k}p\overline{_{x:y}}=P(T(\overline{x:y})>k)$$Zak³adamy, ¿e zmienne te s¹ niezale¿ne. Korzystaj¹c z tablic ¿ycia otrzymujemy $$_{k}p\overline{_{x:y}}=_{k}p_{x}+_{k}p_{y}-_{k}p_{x}\cdot_{k}p_{y}=\frac{l_{x+k}}{l_{x}}+\frac{l_{y+k}}{l_{y}}-\frac{l_{x+k}}{l_{x}}\cdot\frac{l_{y+k}}{l_{y}}$$\newpage Funckje prze¿ycia dla 20-latka i 28-latka:
+
+
+\begin{minipage}{7cm}
+<<echo=FALSE, fig=TRUE>>=
+
+p = (dane[22:93,2]/(dane[21,2])*dane[30:101,2]/(dane[29,2]))
+plot(p,type="l",col="red",xlab = "k",ylab = "prawdop.")
+grid() 
+@
+\end{minipage}\hfil
+\begin{minipage}{7cm}
+<<echo=FALSE, fig=TRUE>>=
+
+p = (dane[22:93,2]/(dane[21,2])+dane[30:101,2]/(dane[29,2])-dane[22:93,2]/(dane[21,2])*dane[30:101,2]/(dane[29,2]))
+plot(p,type="l",col="red",xlab = "k",ylab="prawdop.")
+grid() 
+@
+\end{minipage}
+
+\noindent Prawdopodobieñstwo do¿ycia k-tego roku przez 20-latka i 28-latka do momentu pierwszej œmierci znacznie spada w momencie do¿ycia jeszcze 20 kolejnych lat. Z kolei prawdopodobieñstwo do¿ycia przez nich k-tego roku do momentu ostatniej œmierci zaczyna dopiero maleæ w momencie do¿ycia jeszcze 40 kolejnych lat. 
+
+\bigskip\noindent\ Prawdopodobieñstwo, ¿e obie osoby do¿yj¹ do 60 lat wynosi $_{60}p_{20:28}$ 
+<<echo=FALSE, results=verbatim>>=
+(dane[61,2]/dane[21,2])*(dane[61,2]/dane[29,2])
+@
+Prawdopodobieñstwo, ¿e przynajmniej jedna osoba do¿yje do 60 lat wynosi $_{60}p\overline{_{20:28}}$
+<<echo=FALSE, results=verbatim>>=
+(dane[61,2]/dane[21,2])+(dane[61,2]/dane[29,2])-(dane[61,2]/dane[21,2])*(dane[61,2]/dane[29,2])
+@
+\newpage\noindent Niech $K(x)$ oznacza sp³aszczony dalszy czas ¿ycia x-latka ($K(x)=[T(x)]$), odpowiednio dla y-latka ($K(y)=[T(y)]$). Prawdopodobieñstwo, ¿e obie osoby umr¹ dok³adnie w k-tym roku, gdzie $k=\{1,2,...\}$ wynosi $$P(K(x)=k-1 \wedge K(y)=k-1)=P(K(x)=k-1)\cdot P(K(y)=k-1)=\frac{d_{x+k-1}}{l_{x}}\cdot \frac{d_{y+k-1}}{l_{y}}$$
+
+
+<<echo=FALSE, results=tex>>=
+library(xtable)
+a=1:18
+b=19:36
+c=37:54
+d=55:72
+
+desc <- data.frame(a,(dane[22:39,4]/dane[21,2])*(dane[30:47,4]/dane[29,2]),b,(dane[40:57,4]/dane[21,2])*(dane[48:65,4]/dane[29,2]),c,(dane[58:75,4]/dane[21,2])*(dane[66:83,4]/dane[29,2]),d,(dane[76:93,4]/dane[21,2])*(dane[84:101,4]/dane[29,2]))
+names(desc) <- c("k","P","k","P","k","P","k","P")
+
+desc.table <- xtable(desc,digits = 7)
+align(desc.table) <- "|c|c|c|c|c|c|c|c|c|"
+print(desc.table, include.rownames = FALSE)
+
+@
+
+
+\newpage\noindent Prawdopodobieñstwo, ¿e jedna z tych osób umrze dok³adnie w k-tym roku wynosi 
+$$P(K(x)=k-1 \vee K(y)=k-1)=P(K(x)=k-1)+P(K(y)=k-1)-P(K(x)=k-1)\cdot P(K(y)=k-1)$$
+\noindent Korzystaj¹c z tablic ¿ycia otrzymamy 
+$$\frac{d_{x+k-1}}{l_{x}}+ \frac{d_{y+k-1}}{l_{y}}-\frac{d_{x+k-1}}{l_{x}}\cdot \frac{d_{y+k-1}}{l_{y}}$$
+
+<<echo=FALSE, results=tex>>=
+library(xtable)
+a=1:18
+b=19:36
+c=37:54
+d=55:72
+
+desc <- data.frame(a,(dane[22:39,4]/dane[21,2])+(dane[30:47,4]/dane[29,2])-(dane[22:39,4]/dane[21,2])*(dane[30:47,4]/dane[29,2]),b,(dane[40:57,4]/dane[21,2])+(dane[48:65,4]/dane[29,2])-(dane[40:57,4]/dane[21,2])*(dane[48:65,4]/dane[29,2]),c,(dane[58:75,4]/dane[21,2])+(dane[66:83,4]/dane[29,2])-(dane[58:75,4]/dane[21,2])*(dane[66:83,4]/dane[29,2]),d,(dane[76:93,4]/dane[21,2])+(dane[84:101,4]/dane[29,2])-(dane[76:93,4]/dane[21,2])*(dane[84:101,4]/dane[29,2]))
+names(desc) <- c("k","P","k","P","k","P","k","P")
+
+desc.table <- xtable(desc,digits = 7)
+align(desc.table) <- "|c|c|c|c|c|c|c|c|c|"
+print(desc.table, include.rownames = FALSE)
+
+@
+\newpage
+
+\section{Analiza danych w ubezpieczeniach na ¿ycie}
+\noindent{\bf Projekt egzaminacyjny - czêœæ 1}
+
+\bigskip
+\noindent{\it Podpunkt 1}
+\newline
+
+\noindent Dana jest sytuacja, w której x-latek zakupuje ubezpieczenie, w którym kwota $C=1$ jest wyp³acana na koniec roku jego œmierci. Niech $Z$ bêdzie zmienn¹ losow¹ opisuj¹c¹ wartoœæ bie¿¹c¹ tego œwiadczenia: $$Z = V^{K+1}$$
+\noindent gdzie: 
+\newline $K$ to sp³aszczony dalszy czas ¿ycia x-latka, $K=[T(x)]$
+\newline $V$ jest czynnikiem dyskontuj¹cym, $V=\frac{1}{1+i}$
+\newline $i$ to stopa efektywna roczna. 
+\newline
+\newline Chc¹c wyznaczyæ jednorazow¹ sk³adkê netto (JSN) jak¹ x-latek musi zap³aciæ przy zakupie tego ubezpieczenia nale¿y obliczyæ wartoœæ oczekiwan¹ zmiennej losowej $Z$.
+$$EZ = A_{x} = \sum_{k=0}^{\infty}\quad\cdot V^{k+1}\cdot P(K=k)$$
+
+\noindent gdzie:
+\newline $P(K=k)$ to prawdopodobieñstwo, ¿e x-latek umrze w k-tym roku.
+\newline
+\newline\noindent Zak³adamy, ¿e $i=5\%$. JSN jak¹ 20-latek musi zap³aciæ, chc¹c wykupiæ ubezpieczenie w wysokoœci $50000$ z³ wyp³acane na koniec roku jego œmierci wynosi:
+
+<<echo=FALSE>>=
+dane = read.csv2("C:/Users/doncz/Desktop/MMAD/InsuranceProject/tabzycia.csv", header= FALSE, sep=";")
+@
+
+<<echo=FALSE, results=verbatim>>=
+k=1:80
+i=0.05
+p = (1/(1+i))^k*(dane[22:101,4]/dane[21,2])
+50000*sum(p)
+@
+
+\line(1,0){10em}
+\bigskip
+\newline
+\noindent{\it Podpunkt 2}
+\bigskip
+\newline
+\noindent Oznaczmy przez $u_{1}$, $u_{2}$ odpowiednio stan $T(x:y)$, $T(\overline{x:y})$. Niech $K(x:y)$ oznacza sp³aszczony dalszy czas ¿ycia x-latka i y-latka do momentu pierwszej œmierci, a $K(\overline{x:y})$ sp³aszczony dalszy czas ¿ycia x-latka i y-latka do momentu drugiej œmierci. Stan $u_{1}$, $u_{2}$ ubezpiecza siê na kwotê $C=1$. Œwiadczenie jest wyp³acane odpowiednio na koniec roku pierwszej œmierci, na koniec roku drugiej œmierci. Zmienne $Z_{1}$, $Z_{2}$ opisuj¹ce wartoœci bie¿¹ce tego œwiadczenia: 
+
+$$Z_{1} = Z_{2} = V^{K+1}$$
+
+\noindent Chc¹c wyznaczyæ jednorazow¹ sk³adkê netto (JSN) jak¹ stan $u_{1}$ musi zap³aciæ przy zakupie tego ubezpieczenia nale¿y obliczyæ wartoœæ oczekiwan¹ zmiennej losowej $Z_{1}$.
+
+$$EZ_{1} = A_{u_{1}} = \sum_{k=0}^{\infty}\quad\cdot V^{k+1}\cdot P(K(x:y)=k)$$
+
+\noindent Jednak o wiele wygodniej jest pos³u¿yæ siê zale¿noœci¹ $$A_{u_{1}} + d\cdot \ddot{a}_{u_{1}}=1$$
+\noindent gdzie:
+\newline\noindent $d$ to stopa dyskontowa, $d=\frac{i}{i+1}$
+\newline\noindent $\ddot{a}_{u_{1}}$ to aktuarialna wartoœæ renty dla stanu $u$
+\newline
+
+\newline\noindent Zak³adamy, ¿e $i=5\%$. JSN jak¹ 20-latek i 28-latek musz¹ zap³aciæ, chc¹c wykupiæ ubezpieczenie w wysokoœci $50000$ z³ wyp³acane na koniec roku {\bf pierwszej œmierci} wynosi:
+
+
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+d = i/(1+i)
+V=1/(1+i)
+
+p = d*V^(k)*((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2]))
+50000*(1-sum(p))
+@
+
+\noindent Chc¹c wyznaczyæ jednorazow¹ sk³adkê netto (JSN) jak¹ stan $u_{2}$ musi zap³aciæ przy zakupie tego ubezpieczenia nale¿y obliczyæ wartoœæ oczekiwan¹ zmiennej losowej $Z_{2}$.
+
+$$EZ_{2} = A_{u_{2}} = \sum_{k=0}^{\infty}\quad\cdot V^{k+1}\cdot P(K(\overline{x:y})=k)$$
+\noindent gdzie: 
+$$P(K(\overline{x:y})=k)= _{k}p_{\overline{x:y}}\cdot q_{\overline{x+k:y+k}} = _{k}p_{x} + _{k}p_{y} -_{k}p_{x}\cdot _{k}p_{y}\cdot (1-(p_{x+k} + p_{y+k} - p_{x+k}\cdot p_{y+k}))$$
+
+
+\newline\noindent Zak³adamy, ¿e $i=5\%$. JSN jak¹ 20-latek i 28-latek musz¹ zap³aciæ, chc¹c wykupiæ ubezpieczenie w wysokoœci $50000$ z³ wyp³acane na koniec roku {\bf drugiej œmierci} wynosi:
+
+
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+d = i/(1+i)
+V=1/(1+i)
+
+p = d*V^(k)*((dane[22:93,2]/dane[21,2])+(dane[30:101,2]/dane[29,2])-((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+round(50000*(1-sum(p)),digits = 2)
+@
+
+\newpage
+\noindent{\bf Projekt egzaminacyjny - czêœæ 2}
+\bigskip
+
+\noindent Dana jest sytuacja, w której stan {u} wp³aca na pocz¹tku roku po z³otówce tak d³ugo jak ¿yje. Niech $Y$ bêdzie zmienn¹ losow¹ opisuj¹c¹ wartoœæ bie¿¹c¹ wp³at 
+
+$$Y= \sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot \quad 1{\hskip -2.5 pt}\hbox{l}_{\{K(u)\geq k\}}$$
+
+\noindent Chc¹c wyznaczyæ aktuarialn¹ wartoœæ renty dla stanu $u$ nale¿y obliczyæ wartoœæ oczekiwan¹ zmiennej $Y$.
+$$AWR = \ddot{a}_{u}=EY=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot P(K(u)\geq k)=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot _{k}p_{u}$$
+\noindent
+\bigskip
+\line(1,0){10em}
+\bigskip
+
+\noindent a) aktuarialna wartoœæ renty do momentu œmierci osoby x-latka, $u=x$
+
+$$AWR=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot _{k}p_{x}$$
+
+\smallskip
+\noindent AWR do momentu œmierci 20-latka przy stopie oprocentowania $i=5\%$ wynosi
+
+<<echo=FALSE, results=verbatim>>=
+k=1:80
+i=0.05
+p = (1/(1+i))^k*(dane[22:101,2]/dane[21,2])
+round(sum(p),digits=2)
+@
+\bigskip
+\line(1,0){10em}
+\bigskip
+
+\noindent b) aktuarialna wartoœæ renty do momentu pierwszej œmierci x-latka lub y-latka, $u=x:y$
+
+$$AWR=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot _{k}p_{x:y}=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot _{k}p_{x}\cdot _{k}p_{y}$$
+
+\smallskip
+\noindent AWR do momentu pierwszej œmierci 20-latka lub 28-latka przy stopie oprocentowania $i=5\%$ wynosi
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+p = (1/(1+i))^k*((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2]))
+round(sum(p),digits=2)
+@
+\bigskip
+\line(1,0){10em}
+\bigskip
+
+\noindent c) aktuarialna wartoœæ renty do momentu drugiej œmierci x-latka lub y-latka, $u=\overline{x:y}$
+
+$$AWR=\sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot _{k}p_{\overline{x:y}}= \sum_{k=0}^{\infty}\quad\cdot V^{k}\cdot (_{k}p_{x} + _{k}p_{y} - _{k}p_{x}\cdot _{k}p_{y})$$
+
+\smallskip
+\noindent AWR do momentu drugiej œmierci 20-latka lub 28-latka przy stopie oprocentowania $i=5\%$ wynosi
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+p = (1/(1+i))^k*((dane[22:93,2]/dane[21,2])+(dane[30:101,2]/dane[29,2])-(dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2]))
+round(sum(p),digits=2)
+@
+
+
+\newpage
+\noindent{\bf Projekt egzaminacyjny - czêœæ 3}
+\bigskip
+
+\noindent Dana jest sytuacja, w której x-latek i y-latek zakupuj¹ ubezpieczenie, w którym kwota $C_{1}$ wyp³acana jest na koniec roku pierwszej œmierci, a kwota $C_{2}$ wyp³acana jest na koniec roku drugiej œmierci. Sk³adka wysokoœci $P$ p³acona jest na pocz¹tku roku do momentu:
+\smallskip
+\newline\noindent a) pierwszej œmierci
+\newline\noindent b) drugiej œmierci
+\bigskip
+\newline\noindent Zmienn¹ losow¹ opisuj¹c¹ wartoœæ bie¿¹c¹ wp³at jest 
+
+$$Z = C_{1}\cdot V^{K_{1}+1} + C_{2}\cdot V^{K_{2}+1}$$
+
+\bigskip
+\noindent Zmienn¹ losow¹ opisuj¹c¹ wartoœæ bie¿¹c¹ wyp³at jest 
+\bigskip
+\newline\noindent a)
+
+$$Y = P \cdot\sum_{k=0}^{\infty}\quad V^{k}\cdot\quad 1{\hskip -2.5 pt}\hbox{l}_{\{K_{1}\geq k\}}$$
+
+\smallskip
+\newline\noindent b)
+
+$$Y = P \cdot\sum_{k=0}^{\infty}\quad V^{k}\cdot\quad 1{\hskip -2.5 pt}\hbox{l}_{\{K_{2}\geq k\}}$$
+
+\noindent gdzie:
+\smallskip
+\newline\noindent $K_{1} = K(x:y)$
+\smallskip
+\newline\noindent $K_{2} = K(\overline{x:y})$
+
+\bigskip
+\noindent Chc¹c obliczyæ wysokoœæ sk³adki $P$ korzystamy z zasady równowa¿noœci. Œrednie wartoœci wp³at s¹ równe œrendim wartoœciom wyp³at $EZ=EY$
+
+\bigskip
+\newline\noindent a)
+
+$$ C_{1}\cdot A_{x:y}+C_{2}\cdot A_{\overline{x:y}} = P\cdot \ddot{a}_{x:y}$$
+
+\smallskip
+\noindent Wyznaczaj¹c ze wzroru $P$ otrzymamy:
+
+$$P=\frac{C_{1}\cdot A_{x:y}+C_{2}\cdot A_{\overline{x:y}}}{\ddot{a}_{x:y}}$$
+
+
+\newline\noindent b)
+
+$$ C_{1}\cdot A_{x:y}+C_{2}\cdot A_{\overline{x:y}} = P\cdot \ddot{a}_{\overline{x:y}}$$
+
+\smallskip
+\noindent Wyznaczaj¹c ze wzroru $P$ otrzymamy:
+
+$$P=\frac{C_{1}\cdot A_{x:y}+C_{2}\cdot A_{\overline{x:y}}}{\ddot{a}_{\overline{x:y}}}$$
+
+\newpage
+\noindent W sytuacji, w której 20-latek i 28-latek zakupuj¹ ubezpieczenie, w którym $C_{1} = 50000$, a  $C_{2} = 100000$, stopa procentowa $i=5\%$, sk³adka netto P p³acona na pocz¹tku ka¿dego roku wynosi:
+
+\bigskip
+\newline\noindent w przypadku a)
+
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+d = i/(1+i)
+V=1/(1+i)
+C1=50000
+C2=100000
+
+
+a = (d*(V^(k))*((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+Axy = (1-sum(a))
+
+b = d*V^(k)*((dane[22:93,2]/dane[21,2])+(dane[30:101,2]/dane[29,2])-((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+A_xy = (1-sum(b))
+
+c = (1/(1+i))^k*((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2]))
+awr = sum(c)
+
+p = (C1*Axy + C2*A_xy)/awr
+round(p, digits=2)
+@
+
+\bigskip
+\newline\noindent w przypadku b)
+
+
+<<echo=FALSE, results=verbatim>>=
+k=1:72
+i=0.05
+d = i/(1+i)
+V=1/(1+i)
+C1=50000
+C2=100000
+
+
+a = (d*(V^(k))*((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+Axy = (1-sum(a))
+
+b = d*V^(k)*((dane[22:93,2]/dane[21,2])+(dane[30:101,2]/dane[29,2])-((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+A_xy = (1-sum(b))
+
+c = (1/(1+i))^k*((dane[22:93,2]/dane[21,2])+(dane[30:101,2]/dane[29,2])-((dane[22:93,2]/dane[21,2])*(dane[30:101,2]/dane[29,2])))
+awr_ = sum(c)
+
+p = (C1*Axy + C2*A_xy)/awr_
+round(p, digits=2)
+@
+
+
+
+\end{document}
